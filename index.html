@@ -29,8 +29,8 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23a83c0a'/%3E%3Cpath d='M7 9l4 15 5-11 5 11 4-15' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"
     >
-    <script type="module" crossorigin src="./assets/index-Bsky6y57.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DufXj9zb.css">
+    <script type="module" crossorigin src="./assets/index-BSy4FnB5.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DwUK9L8N.css">
   </head>
   <body>
     <a class="skip-link" href="#workspace">Skip to workspace</a>
@@ -39,7 +39,7 @@
         <span class="brand-mark" aria-hidden="true">W</span>wallsemble<span
           class="version"
         >
-          v0.5.1
+          v0.6.0
         </span>
       </a>
       <div class="top-actions">
@@ -238,27 +238,81 @@
                   maxlength="100"
                 ></label
               >
-              <p class="small-label spaced">ARRANGEMENT TOOLS</p>
+              <p class="small-label spaced">LAYOUT PRESETS</p>
               <label class="inset-label"
                 >Template gap<span class="measure-input short"
                   ><input id="layout-gap" type="text" inputmode="decimal">
                   <span data-unit>in</span></span
                 ></label
               >
-              <div class="composition-actions">
+              <fieldset class="preset-grid" aria-label="Layout presets">
                 <button data-arrange="row" class="button quiet" type="button">
-                  Row
-                </button><button
-                  data-arrange="grid"
+                  <svg viewBox="0 0 64 40" aria-hidden="true">
+                    <path
+                      d="M5 10h14v20H5z M25 10h14v20H25z M45 10h14v20H45z"
+                    />
+                  </svg
+                  >Row
+                </button>
+                <button
+                  data-arrange="column"
                   class="button quiet"
                   type="button"
                 >
-                  Grid
-                </button><button
-                  data-arrange="top"
+                  <svg viewBox="0 0 64 40" aria-hidden="true">
+                    <path d="M23 2h18v9H23z M23 15h18v10H23z M23 29h18v9H23z" />
+                  </svg
+                  >Column
+                </button>
+                <button data-arrange="grid" class="button quiet" type="button">
+                  <svg viewBox="0 0 64 40" aria-hidden="true">
+                    <path
+                      d="M12 3h16v14H12z M36 3h16v14H36z M12 23h16v14H12z M36 23h16v14H36z"
+                    />
+                  </svg
+                  >Grid
+                </button>
+                <button
+                  data-arrange="staggered"
                   class="button quiet"
                   type="button"
                 >
+                  <svg viewBox="0 0 64 40" aria-hidden="true">
+                    <path
+                      d="M4 3h16v14H4z M28 3h16v14H28z M16 23h16v14H16z M40 23h16v14H40z"
+                    />
+                  </svg
+                  >Staggered
+                </button>
+                <button
+                  data-arrange="staircase"
+                  class="button quiet"
+                  type="button"
+                >
+                  <svg viewBox="0 0 64 40" aria-hidden="true">
+                    <path d="M5 22h14v16H5z M25 12h14v16H25z M45 2h14v16H45z" />
+                  </svg
+                  >Staircase
+                </button>
+                <button
+                  id="randomize-layout"
+                  class="button quiet"
+                  type="button"
+                >
+                  <svg viewBox="0 0 64 40" aria-hidden="true">
+                    <path
+                      d="M5 8h14v22H5z M25 2h15v14H25z M25 22h15v16H25z M46 10h13v20H46z"
+                    />
+                  </svg
+                  >Randomize
+                </button>
+              </fieldset>
+              <p id="arrangement-status" class="hint" role="status">
+                Presets keep your measured sizes. Randomize respects wall
+                insets, furniture clearance and other pieces.
+              </p>
+              <div class="composition-actions">
+                <button data-arrange="top" class="button quiet" type="button">
                   Align tops
                 </button><button
                   data-arrange="middle"
@@ -1201,10 +1255,10 @@
             <span>No account. No uploads. </span>
           </footer>
           <p class="prototype-note">
-            v0.5.1 connects guided hanging measurements with wall arrangements.
-            Replace example dimensions with your measurements. Wire predictions
-            need a loaded check after fitting. Everything stays on your device;
-            keep a JSON export as a backup. Sharing comes later.
+            v0.6.0 adds layout presets and Randomize in Arrange a wall. Your
+            measured sizes and hardware stay unchanged. Replace example
+            measurements and check loaded wire before installing. Everything
+            stays on your device; keep a JSON export as a backup.
           </p>
         </div>
       </div>
