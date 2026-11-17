@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e7eaeb">
+    <script>
+    try {
+      const preference = localStorage.getItem("wallsemble.theme") || "system";
+      const dark =
+        preference === "dark" ||
+        (preference === "system" &&
+          matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch {
+      document.documentElement.dataset.theme = matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches
+        ? "dark"
+        : "light";
+    }
+    </script>
+    <meta
+      name="description"
+      content="A little planning for a wall that feels right. Calculate picture hanging points, explore placement, and keep your measurements on your device."
+    >
+    <title>Wallsemble - make room for your art</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23a83c0a'/%3E%3Cpath d='M7 9l4 15 5-11 5 11 4-15' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"
+    >
+    <script type="module" crossorigin src="./assets/index-Bsky6y57.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DufXj9zb.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Wallsemble home">
+        <span class="brand-mark" aria-hidden="true">W</span>wallsemble<span
+          class="version"
+        >
+          v0.5.1
+        </span>
+      </a>
+      <div class="top-actions">
+        <span class="local-indicator">On your device. Yours to keep.</span>
+        <button id="storage-button" class="button quiet" type="button">
+          Storage
+        </button>
+        <select id="theme-picker" aria-label="Color theme">
+          <option value="system">System theme</option>
+          <option value="light">Light theme</option>
+          <option value="dark">Dark theme</option>
+        </select>
+        <button id="import-button" class="button quiet" type="button">
+          Import JSON
+        </button>
+        <input
+          id="import-file"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        >
+        <button id="export-button" class="button dark" type="button">
+          Export JSON<span aria-hidden="true">&#8599;</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="workspace">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">A PLACE FOR YOUR PIECES</p>
+          <h1 id="page-title">Good art. <em>Right place.</em></h1>
+          <p class="intro-copy">
+            Find the spot, get the measurements, make it yours.
+          </p>
+        </div>
+        <fieldset class="unit-picker" aria-label="Measurement units">
+          <button type="button" data-units="in" aria-pressed="true">
+            Imperial <span>in</span>
+          </button>
+          <button type="button" data-units="cm" aria-pressed="false">
+            Metric <span>cm</span>
+          </button>
+        </fieldset>
+      </section>
+      <p id="notice" class="notice" role="status" hidden></p>
+      <div class="workspace-tabs" role="tablist" aria-label="Planning views">
+        <button
+          id="workspace-hang"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="hang-view"
+        >
+          Hang a piece
+        </button>
+        <button
+          id="workspace-arrange"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="arrange-view"
+          tabindex="-1"
+        >
+          Arrange a wall
+        </button>
+      </div>
+      <div class="workspace-grid">
+        <aside class="controls" aria-label="Arrangement measurements">
+          <div class="tool-tabs" role="tablist" aria-label="Workspace tools">
+            <button
+              id="tab-wall"
+              role="tab"
+              type="button"
+              aria-controls="tool-wall"
+              aria-selected="false"
+              tabindex="-1"
+            >
+              Wall <kbd aria-hidden="true">1</kbd>
+            </button>
+            <button
+              id="tab-arrange"
+              role="tab"
+              type="button"
+              aria-controls="tool-arrange"
+              aria-selected="true"
+            >
+              Arrange <kbd aria-hidden="true">2</kbd>
+            </button>
+            <button
+              id="tab-install"
+              role="tab"
+              type="button"
+              aria-controls="tool-install"
+              aria-selected="false"
+              tabindex="-1"
+            >
+              Install <kbd aria-hidden="true">3</kbd>
+            </button>
+          </div>
+          <p id="tool-description" class="tool-description"></p>
+          <fieldset class="mode-picker" aria-label="What are you hanging?">
+            <button
+              class="mode active"
+              data-mode="single"
+              type="button"
+              aria-pressed="true"
+            >
+              <span class="mode-symbol" aria-hidden="true">&#9633;</span>
+              A large piece
+            </button>
+            <button
+              class="mode"
+              data-mode="composition"
+              type="button"
+              aria-pressed="false"
+            >
+              <span class="mode-symbol" aria-hidden="true">&#9707;</span>
+              Composition
+            </button>
+          </fieldset>
+          <section
+            id="layout-controls"
+            class="control-section"
+            aria-labelledby="layout-heading"
+          >
+            <div class="section-heading">
+              <h2 id="layout-heading">Your arrangements</h2>
+              <span id="piece-count" class="small-label"></span>
+            </div>
+            <label>Active layout<select id="layout-picker"></select></label>
+            <label class="spaced"
+              >Layout name<input
+                id="layout-name"
+                type="text"
+                maxlength="100"
+              ></label
+            >
+            <div class="inline-actions">
+              <button id="copy-layout" class="text-button" type="button">
+                Duplicate layout
+              </button><button
+                id="delete-layout"
+                class="text-button"
+                type="button"
+              >
+                Delete layout
+              </button>
+            </div>
+            <div id="composition-tools" hidden>
+              <p class="small-label spaced">
+                PIECES
+                <span class="hint"> / select to edit, check to group</span>
+              </p>
+              <div id="piece-list" class="piece-list"></div>
+              <div class="composition-actions">
+                <button id="add-piece" class="button quiet" type="button">
+                  Add piece
+                </button><button
+                  id="copy-piece"
+                  class="button quiet"
+                  type="button"
+                >
+                  Duplicate
+                </button><button
+                  id="delete-piece"
+                  class="button quiet"
+                  type="button"
+                >
+                  Delete selected
+                </button>
+              </div>
+              <p id="selection-summary" class="hint" role="status"></p>
+              <button
+                id="select-composition"
+                class="text-button spaced"
+                type="button"
+              >
+                Select composition
+              </button>
+              <div class="inline-actions">
+                <button id="group-pieces" class="text-button" type="button">
+                  Group selected
+                </button><button
+                  id="ungroup-pieces"
+                  class="text-button"
+                  type="button"
+                >
+                  Ungroup
+                </button>
+              </div>
+              <label id="group-name-label" class="spaced" hidden
+                >Composition name<input
+                  id="group-name"
+                  type="text"
+                  maxlength="100"
+                ></label
+              >
+              <p class="small-label spaced">ARRANGEMENT TOOLS</p>
+              <label class="inset-label"
+                >Template gap<span class="measure-input short"
+                  ><input id="layout-gap" type="text" inputmode="decimal">
+                  <span data-unit>in</span></span
+                ></label
+              >
+              <div class="composition-actions">
+                <button data-arrange="row" class="button quiet" type="button">
+                  Row
+                </button><button
+                  data-arrange="grid"
+                  class="button quiet"
+                  type="button"
+                >
+                  Grid
+                </button><button
+                  data-arrange="top"
+                  class="button quiet"
+                  type="button"
+                >
+                  Align tops
+                </button><button
+                  data-arrange="middle"
+                  class="button quiet"
+                  type="button"
+                >
+                  Align centers
+                </button><button
+                  data-arrange="distribute"
+                  class="button quiet"
+                  type="button"
+                >
+                  Equal gaps
+                </button>
+              </div>
+              <label class="snap-toggle"
+                ><input id="snap-toggle" type="checkbox">
+                Snap while dragging
+                <span id="snap-step" class="hint"></span></label
+              >
+              <p class="hint">
+                Click a picture to select it; drag to move the selection.
+                Shift-click adds or removes pieces. Use Select composition to
+                move the whole group. Tools affect checked pieces, or all pieces
+                if fewer than 2 are checked.
+              </p>
+            </div>
+          </section>
+          <form id="measurements" novalidate>
+            <div id="hang-fields"></div>
+            <div
+              id="tool-wall"
+              role="tabpanel"
+              aria-labelledby="tab-wall"
+              hidden
+            ></div>
+            <div
+              id="tool-arrange"
+              role="tabpanel"
+              aria-labelledby="tab-arrange"
+            ></div>
+            <div
+              id="tool-install"
+              role="tabpanel"
+              aria-labelledby="tab-install"
+              hidden
+            >
+              <div id="install-fields"></div>
+            </div>
+            <section class="control-section" aria-labelledby="wall-heading">
+              <div class="section-heading">
+                <h2 id="wall-heading"><span>01</span> Your wall</h2>
+                <span class="small-label">Shared by all layouts</span>
+              </div>
+              <p class="section-copy">Start with the space you have.</p>
+              <div class="field-grid">
+                <label>
+                  Wall width
+                  <span class="measure-input">
+                    <input
+                      id="wall-width"
+                      data-path="wall.width"
+                      inputmode="decimal"
+                      type="text"
+                    >
+                    <span data-unit>in</span>
+                  </span>
+                </label>
+                <label>
+                  Wall height
+                  <span class="measure-input">
+                    <input
+                      id="wall-height"
+                      data-path="wall.height"
+                      inputmode="decimal"
+                      type="text"
+                    >
+                    <span data-unit>in</span>
+                  </span>
+                </label>
+              </div>
+              <label class="snap-toggle"
+                ><input id="link-insets" type="checkbox" checked>
+                Link wall insets <small>(uses left inset)</small></label
+              >
+              <label id="uniform-inset" class="inset-label">
+                Inset on all sides
+                <span class="measure-input short">
+                  <input id="wall-padding" inputmode="decimal" type="text">
+                  <span data-unit>in</span>
+                </span>
+              </label>
+              <div
+                id="individual-insets"
+                class="field-grid inset-fields"
+                hidden
+              >
+                <label
+                  >Top inset<span class="measure-input"
+                    ><input
+                      id="inset-top"
+                      data-path="wall.padding.top"
+                      inputmode="decimal"
+                      type="text"
+                    ><span data-unit>in</span></span
+                  ></label
+                >
+                <label
+                  >Right inset<span class="measure-input"
+                    ><input
+                      id="inset-right"
+                      data-path="wall.padding.right"
+                      inputmode="decimal"
+                      type="text"
+                    ><span data-unit>in</span></span
+                  ></label
+                >
+                <label
+                  >Bottom inset<span class="measure-input"
+                    ><input
+                      id="inset-bottom"
+                      data-path="wall.padding.bottom"
+                      inputmode="decimal"
+                      type="text"
+                    ><span data-unit>in</span></span
+                  ></label
+                >
+                <label
+                  >Left inset<span class="measure-input"
+                    ><input
+                      id="inset-left"
+                      data-path="wall.padding.left"
+                      inputmode="decimal"
+                      type="text"
+                    ><span data-unit>in</span></span
+                  ></label
+                >
+              </div>
+              <p class="hint">
+                The dashed line is a guide, not a boundary. Insets never move
+                your pieces.
+              </p>
+            </section>
+
+            <div id="piece-fields-home">
+              <div id="piece-fields">
+                <section
+                  class="control-section"
+                  aria-labelledby="piece-heading"
+                >
+                  <div class="section-heading">
+                    <h2 id="piece-heading"><span>02</span> Your piece</h2>
+                    <input
+                      id="piece-color"
+                      type="color"
+                      aria-label="Piece color"
+                    >
+                  </div>
+                  <label>
+                    Piece name
+                    <input id="piece-label" type="text" maxlength="100">
+                  </label>
+                  <div class="field-grid spaced">
+                    <label>
+                      Outer width
+                      <span class="measure-input">
+                        <input
+                          id="piece-width"
+                          data-path="piece.shape.width"
+                          inputmode="decimal"
+                          type="text"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                    <label>
+                      Outer height
+                      <span class="measure-input">
+                        <input
+                          id="piece-height"
+                          data-path="piece.shape.height"
+                          inputmode="decimal"
+                          type="text"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                  </div>
+                  <p class="hint">
+                    Include the frame. Fractions like 20 1/2 work too.
+                  </p>
+                  <div class="field-grid spaced">
+                    <label>
+                      Left edge from wall
+                      <span class="measure-input">
+                        <input
+                          id="piece-left"
+                          data-path="piece.left"
+                          inputmode="decimal"
+                          type="text"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                    <label>
+                      Center above floor
+                      <span class="measure-input">
+                        <input
+                          id="piece-center"
+                          data-path="piece.centerHeight"
+                          inputmode="decimal"
+                          type="text"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="inline-actions">
+                    <button id="center-piece" class="text-button" type="button">
+                      Center on wall
+                    </button>
+                    <button id="reset-height" class="text-button" type="button">
+                      Use standard height
+                    </button>
+                  </div>
+                  <p class="hint">
+                    Start with the center at
+                    <span id="standard-height">57 in</span>
+                    , then trust your eye.
+                  </p>
+                </section>
+
+                <section
+                  class="control-section"
+                  aria-labelledby="hardware-heading"
+                >
+                  <div class="section-heading">
+                    <h2 id="hardware-heading">
+                      <span>03</span>
+                      Behind the frame
+                    </h2>
+                  </div>
+                  <label>
+                    Hanging setup<select id="hanging-kind">
+                      <option value="existing-wire">It already has wire</option>
+                      <option value="direct-one">1 direct hanger</option>
+                      <option value="direct-two">2 direct hangers</option>
+                      <option value="new-wire">I'm adding wire or twine</option>
+                    </select>
+                  </label>
+                  <p class="hint example-note">
+                    Starter values are examples, not measured hardware locations
+                    or mounting recommendations. Replace them using the
+                    measuring guide.
+                  </p>
+                  <div id="wire-settings">
+                    <label
+                      >Wall hooks supporting the wire<select
+                        id="wire-hook-count"
+                      >
+                        <option value="1">1 centered hook</option>
+                        <option value="2">2 centered, level hooks</option>
+                      </select></label
+                    >
+                    <label id="wire-spacing-field" class="spaced" hidden
+                      >Distance between hook cradles<span class="measure-input"
+                        ><input
+                          id="wire-hook-spacing"
+                          data-path="piece.hanging.wire.hookSpacing"
+                          type="text"
+                          inputmode="decimal"
+                        ><span data-unit>in</span></span
+                      ></label
+                    >
+                    <label id="wire-input-field" class="spaced"
+                      >How will you measure the existing wire?<select
+                        id="wire-input"
+                      >
+                        <option value="measured">
+                          Measure where the loaded wire rests
+                        </option>
+                        <option value="length">
+                          Calculate from its existing length
+                        </option>
+                      </select></label
+                    >
+                  </div>
+                  <div data-setup="existing-wire" class="setup-fields">
+                    <label>
+                      Frame top to loaded hook cradle
+                      <span class="measure-input">
+                        <input
+                          id="support-drop"
+                          data-path="piece.hanging.supportDrop"
+                          inputmode="decimal"
+                          type="text"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                    <p class="hint">
+                      Support the wire with the intended hook hardware. For 2
+                      hooks, keep the cradles level and at the spacing above.
+                      Measure straight down from the frame top to the wire's
+                      resting contact point, under the intended load.
+                    </p>
+                  </div>
+                  <div data-setup="direct" class="setup-fields" hidden>
+                    <p class="hint">
+                      Measure each resting point from the frame's top-left
+                      corner, as seen from the front. Transfer measurements from
+                      the back with care. Each setup keeps its own measurements.
+                    </p>
+                    <button
+                      id="direct-example"
+                      class="text-button"
+                      type="button"
+                    >
+                      Use centered example
+                    </button>
+                    <p class="hint">
+                      Replaces this setup's positions; Undo restores them.
+                      Examples are not measured hardware locations. Use your
+                      actual support measurements before installing.
+                    </p>
+                    <div class="field-grid">
+                      <label>
+                        Hanger 1 from left
+                        <span class="measure-input">
+                          <input
+                            id="direct-1-x"
+                            data-path="piece.hanging.direct.0.x"
+                            inputmode="decimal"
+                            type="text"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                      <label>
+                        Hanger 1 below top
+                        <span class="measure-input">
+                          <input
+                            id="direct-1-y"
+                            data-path="piece.hanging.direct.0.y"
+                            inputmode="decimal"
+                            type="text"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                    </div>
+                    <div id="second-hanger" class="field-grid spaced" hidden>
+                      <label>
+                        Hanger 2 from left
+                        <span class="measure-input">
+                          <input
+                            id="direct-2-x"
+                            data-path="piece.hanging.direct.1.x"
+                            inputmode="decimal"
+                            type="text"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                      <label>
+                        Hanger 2 below top
+                        <span class="measure-input">
+                          <input
+                            id="direct-2-y"
+                            data-path="piece.hanging.direct.1.y"
+                            inputmode="decimal"
+                            type="text"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div id="wire-geometry" class="setup-fields" hidden>
+                    <p class="hint">
+                      Measure the actual attachment contact points on the back
+                      of the frame. This geometry assumes level attachments
+                      centered on the frame and level hooks. For asymmetric
+                      attachments, use the loaded-contact measurement instead.
+                    </p>
+                    <label id="wire-length-field" hidden
+                      >C. Existing wire between attachments<span
+                        class="measure-input"
+                        ><input
+                          id="wire-length"
+                          data-path="piece.hanging.wire.length"
+                          data-optional
+                          type="text"
+                          inputmode="decimal"
+                          placeholder="Measure along the wire"
+                        ><span data-unit>in</span></span
+                      ><small
+                        >Follow the wire between its attachment contact points.
+                        Exclude wrapped or loose ends.</small
+                      ></label
+                    >
+                    <label>
+                      A. Distance between attachments
+                      <span class="measure-input">
+                        <input
+                          id="wire-span"
+                          data-path="piece.hanging.wire.span"
+                          inputmode="decimal"
+                          type="text"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                    <div class="field-grid spaced">
+                      <label>
+                        B. Attachments below frame top
+                        <span class="measure-input">
+                          <input
+                            id="wire-attachment"
+                            data-path="piece.hanging.wire.attachmentDrop"
+                            inputmode="decimal"
+                            type="text"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                      <label id="wire-target-field">
+                        C. Hook cradle below frame top
+                        <span class="measure-input">
+                          <input
+                            id="wire-support"
+                            data-path="piece.hanging.wire.supportDrop"
+                            inputmode="decimal"
+                            type="text"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                    </div>
+                    <label id="wire-target-control"
+                      >Choose the wire's rise visually<input
+                        id="wire-target-slider"
+                        type="range"
+                        min="0"
+                        max="5"
+                        step="0.0625"
+                      ><small
+                        >Move the orange control in the diagram or use this
+                        slider. The attachment locations stay fixed. A shallower
+                        wire angle increases forces; this is geometry, not a
+                        strength recommendation.</small
+                      ></label
+                    >
+                    <div id="wire-allowances">
+                      <p class="small-label spaced">
+                        EXTRA FOR FASTENING EACH END
+                      </p>
+                      <div class="field-grid">
+                        <label>
+                          Left allowance
+                          <span class="measure-input">
+                            <input
+                              id="wire-left"
+                              data-path="piece.hanging.wire.leftAllowance"
+                              data-optional
+                              inputmode="decimal"
+                              type="text"
+                              placeholder="Not set"
+                            >
+                            <span data-unit>in</span>
+                          </span>
+                        </label>
+                        <label>
+                          Right allowance
+                          <span class="measure-input">
+                            <input
+                              id="wire-right"
+                              data-path="piece.hanging.wire.rightAllowance"
+                              data-optional
+                              inputmode="decimal"
+                              type="text"
+                              placeholder="Not set"
+                            >
+                            <span data-unit>in</span>
+                          </span>
+                        </label>
+                      </div>
+                      <p class="hint">
+                        Supply your own fastening allowances. No universal knot
+                        or wrap allowance is assumed.
+                      </p>
+                    </div>
+                    <label>
+                      Actual taut support below top
+                      <small class="optional">optional, after fitting</small>
+                      <span class="measure-input">
+                        <input
+                          id="wire-measured"
+                          data-path="piece.hanging.wire.measuredDrop"
+                          data-optional
+                          inputmode="decimal"
+                          type="text"
+                          placeholder="Use estimate"
+                        >
+                        <span data-unit>in</span>
+                      </span>
+                    </label>
+                    <p class="hint">
+                      Remeasure after fitting the wire. This replaces the
+                      estimated offset in your wall marks.
+                    </p>
+                  </div>
+                  <button
+                    id="confirm-wire-measurement"
+                    class="text-button spaced"
+                    type="button"
+                    hidden
+                  >
+                    Confirm loaded measurement for this hook configuration
+                  </button>
+                  <details class="hardware-offsets">
+                    <summary>Know the hook-to-nail offsets?</summary>
+                    <svg
+                      class="hook-offset-guide"
+                      role="img"
+                      aria-label="Measure from the wire cradle to the actual wall fastener hole. Positive vertical offset is upwards."
+                      viewBox="0 0 290 130"
+                    >
+                      <path
+                        d="M65 20v58q0 17 20 17q15 0 15-15M52 25h26M65 12v26"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      />
+                      <circle cx="85" cy="95" r="4" fill="currentColor" />
+                      <path
+                        d="M130 95V25m-4 5l4-5 4 5M123 95h14M123 25h14"
+                        fill="none"
+                        stroke="currentColor"
+                      />
+                      <text x="149" y="29">Nail / screw hole</text>
+                      <text x="149" y="64">Measure upwards</text>
+                      <text x="149" y="100">Wire / hanger cradle</text>
+                    </svg>
+                    <p class="hint">
+                      Leave blank for support points only. Enter both offsets
+                      for a nail/screw mark. Positive means right or up; zero is
+                      a measured zero.
+                    </p>
+                    <div class="field-grid">
+                      <label>
+                        Fastener 1 right of support
+                        <span class="measure-input">
+                          <input
+                            id="offset-1-x"
+                            data-path="piece.hanging.offsets.0.x"
+                            data-optional
+                            inputmode="decimal"
+                            type="text"
+                            placeholder="Unknown"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                      <label>
+                        Fastener 1 above support
+                        <span class="measure-input">
+                          <input
+                            id="offset-1-y"
+                            data-path="piece.hanging.offsets.0.y"
+                            data-optional
+                            inputmode="decimal"
+                            type="text"
+                            placeholder="Unknown"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                    </div>
+                    <div id="second-offset" class="field-grid spaced" hidden>
+                      <label>
+                        Fastener 2 right of support
+                        <span class="measure-input">
+                          <input
+                            id="offset-2-x"
+                            data-path="piece.hanging.offsets.1.x"
+                            data-optional
+                            inputmode="decimal"
+                            type="text"
+                            placeholder="Unknown"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                      <label>
+                        Fastener 2 above support
+                        <span class="measure-input">
+                          <input
+                            id="offset-2-y"
+                            data-path="piece.hanging.offsets.1.y"
+                            data-optional
+                            inputmode="decimal"
+                            type="text"
+                            placeholder="Unknown"
+                          >
+                          <span data-unit>in</span>
+                        </span>
+                      </label>
+                    </div>
+                  </details>
+                </section>
+              </div>
+            </div>
+          </form>
+        </aside>
+
+        <div class="preview-column">
+          <section class="preview-card" aria-labelledby="preview-heading">
+            <div class="preview-toolbar">
+              <div>
+                <p id="preview-context" class="eyebrow">
+                  YOUR PIECE / MEASURING GUIDE
+                </p>
+                <h2 id="preview-heading">Your wall, your arrangement.</h2>
+              </div>
+              <div class="history-actions">
+                <button
+                  id="measure-piece-button"
+                  class="button quiet"
+                  type="button"
+                >
+                  Measure selected piece
+                </button>
+                <button
+                  id="edit-piece-button"
+                  class="button quiet"
+                  type="button"
+                >
+                  Edit piece
+                </button>
+                <button
+                  id="undo"
+                  class="icon-button"
+                  type="button"
+                  aria-label="Undo"
+                  title="Undo (Ctrl/Cmd+Z)"
+                  disabled
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="m9 5-5 5 5 5M4 10h10a5 5 0 0 1 0 10h-3" />
+                  </svg>
+                </button>
+                <button
+                  id="redo"
+                  class="icon-button"
+                  type="button"
+                  aria-label="Redo"
+                  title="Redo (Ctrl/Cmd+Shift+Z)"
+                  disabled
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="m15 5 5 5-5 5M20 10H10a5 5 0 0 0 0 10h3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <section
+              id="hang-view"
+              role="tabpanel"
+              aria-labelledby="workspace-hang"
+              class="hang-view"
+            >
+              <div class="hanging-guide">
+                <label
+                  >Measuring piece<select
+                    id="hang-piece-picker"
+                  ></select></label
+                >
+                <h2 id="measuring-title">Start with the hardware you have</h2>
+                <p id="measuring-instructions"></p>
+                <p class="hint">
+                  Read these diagrams with the frame top uppermost. The back
+                  view mirrors left/right automatically; input coordinates
+                  remain measured from the front-view left edge.
+                </p>
+              </div>
+              <svg
+                id="hanging-canvas"
+                class="hanging-canvas"
+                aria-labelledby="hanging-title hanging-description"
+              >
+                <title id="hanging-title">Back-of-frame measuring guide</title>
+                <desc id="hanging-description"></desc>
+                <g id="hanging-drawing"></g>
+              </svg>
+              <p
+                id="hanging-calculation"
+                class="hanging-calculation"
+                aria-live="polite"
+              ></p>
+              <p class="hint hanging-help">
+                Set Outer width/height and the actual hardware measurements.
+                Left edge from wall and Center above floor specify where the
+                piece should sit; no complete wall setup is required. The wall
+                marks below are measured from that wall's left edge and the
+                finished floor.
+              </p>
+            </section>
+            <div
+              id="arrange-view"
+              role="tabpanel"
+              aria-labelledby="workspace-arrange"
+              hidden
+            >
+              <fieldset class="view-tools" aria-label="Canvas view controls">
+                <button
+                  id="zoom-out"
+                  class="button quiet"
+                  type="button"
+                  aria-label="Zoom out"
+                >
+                  &#8722;
+                </button>
+                <output id="zoom-level" aria-label="Canvas zoom">100%</output>
+                <button
+                  id="zoom-in"
+                  class="button quiet"
+                  type="button"
+                  aria-label="Zoom in"
+                >
+                  +
+                </button>
+                <button
+                  id="fit-view"
+                  class="button quiet"
+                  type="button"
+                  title="Fit wall (F)"
+                >
+                  Fit
+                </button>
+                <button
+                  id="pan-view"
+                  class="button quiet"
+                  type="button"
+                  aria-pressed="false"
+                >
+                  Pan
+                </button>
+                <button
+                  id="dimension-toggle"
+                  class="button quiet"
+                  type="button"
+                  aria-pressed="true"
+                  title="Dimensions (D)"
+                >
+                  Dimensions
+                </button>
+                <button
+                  id="shortcut-help"
+                  class="button quiet"
+                  type="button"
+                  aria-label="Keyboard shortcuts"
+                >
+                  Shortcuts ?
+                </button>
+              </fieldset>
+              <section
+                class="placement-guidance"
+                aria-label="Placement guidance"
+              >
+                <div class="context-toolbar">
+                  <label
+                    >Placement context<select id="placement-context">
+                      <option value="empty">Empty wall</option>
+                      <option value="furniture">Above furniture</option>
+                    </select></label
+                  >
+                  <button
+                    id="apply-placement"
+                    class="button quiet"
+                    type="button"
+                  >
+                    Apply placement
+                  </button>
+                </div>
+                <p id="guidance-summary" class="hint" role="status"></p>
+                <details id="furniture-settings" hidden>
+                  <summary>Edit furniture measurements</summary>
+                  <p class="hint">
+                    Starter furniture values are examples. Replace them with
+                    your measurements. Editing these fields never moves artwork.
+                  </p>
+                  <label
+                    >Furniture name<input
+                      id="furniture-label"
+                      type="text"
+                      maxlength="100"
+                    ></label
+                  >
+                  <div class="field-grid furniture-fields">
+                    <label
+                      >Furniture width<span class="measure-input"
+                        ><input
+                          id="furniture-width"
+                          data-path="context.furniture.width"
+                          type="text"
+                          inputmode="decimal"
+                        ><span data-unit>in</span></span
+                      ></label
+                    >
+                    <label
+                      >Furniture top above floor<span class="measure-input"
+                        ><input
+                          id="furniture-height"
+                          data-path="context.furniture.height"
+                          type="text"
+                          inputmode="decimal"
+                        ><span data-unit>in</span></span
+                      ></label
+                    >
+                    <label
+                      >Furniture left from wall<span class="measure-input"
+                        ><input
+                          id="furniture-left"
+                          data-path="context.furniture.left"
+                          type="text"
+                          inputmode="decimal"
+                        ><span data-unit>in</span></span
+                      ></label
+                    >
+                    <label
+                      >Clearance above furniture<span class="measure-input"
+                        ><input
+                          id="furniture-clearance"
+                          data-path="context.clearance"
+                          type="text"
+                          inputmode="decimal"
+                        ><span data-unit>in</span></span
+                      ></label
+                    >
+                  </div>
+                </details>
+                <p class="guidance-source hint">
+                  Applies to the entire layout. Suggestions are starting points,
+                  not rules.
+                  <a
+                    href="https://artandfound.co/framing-care/how-to-hang-art/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Guidance source</a
+                  >
+                </p>
+              </section>
+              <div class="wall-size"><span id="wall-dimensions"></span></div>
+              <div class="canvas-container">
+                <svg
+                  id="wall-canvas"
+                  aria-labelledby="canvas-title canvas-description"
+                  viewBox="0 0 120 96"
+                >
+                  <title id="canvas-title">Your wall arrangement</title>
+                  <desc id="canvas-description">
+                    Click a picture to select it, drag to move it, or
+                    double-click to edit beside it. Shift-click selects multiple
+                    pictures. Arrow keys move the selection.
+                  </desc>
+                  <rect id="wall-background" fill="#e9e5db" />
+                  <g id="wall-guides"></g>
+                  <g id="furniture" pointer-events="none"></g>
+                  <g id="frames"></g>
+                  <g id="wall-marks" pointer-events="none"></g>
+                  <g id="dimension-points" pointer-events="none"></g>
+                  <g id="dimensions"></g>
+                </svg>
+              </div>
+              <div class="canvas-footer">
+                <span>
+                  <span class="legend-dot"></span>
+                  <span id="canvas-label">Sunday study</span>
+                </span>
+                <span>
+                  Click to select / Drag to move / Double-click to edit
+                </span>
+              </div>
+              <div class="height-note">
+                <span id="placement-summary"></span>
+                <span class="small-label"
+                  >MEASURED FROM THE FINISHED FLOOR</span
+                >
+              </div>
+            </div>
+            <p id="print-context"></p>
+          </section>
+
+          <section
+            id="feedback"
+            class="feedback"
+            aria-live="polite"
+            hidden
+          ></section>
+
+          <section class="results-card" aria-labelledby="results-heading">
+            <div class="results-heading">
+              <div>
+                <p class="eyebrow">FROM SCREEN TO WALL</p>
+                <h2 id="results-heading">Your hanging plan</h2>
+              </div>
+              <button id="print-button" class="text-button" type="button">
+                Print plan<span aria-hidden="true">&#8599;</span>
+              </button>
+            </div>
+            <div class="results-grid">
+              <div>
+                <div id="marks" aria-live="polite"></div>
+                <div id="wire-result" class="wire-result" hidden></div>
+              </div>
+              <figure class="hardware-figure">
+                <svg
+                  id="hardware-diagram"
+                  role="img"
+                  aria-label="Support points behind the frame, shown in front-view coordinates"
+                  viewBox="-2 -2 24 28"
+                ></svg>
+                <figcaption>
+                  Behind the frame<br>
+                  <span>Coordinates use the front-view left edge.</span>
+                </figcaption>
+              </figure>
+            </div>
+            <p class="safety-note">
+              Measure twice before making a hole. Geometry does not certify wire
+              strength, knots, anchors, or wall capacity. Wire stretch is not
+              predicted. Rounded measurements are marked ~.
+            </p>
+          </section>
+          <footer class="workspace-footer">
+            <span id="save-status" role="status">
+              Changes stay in this browser.
+            </span>
+            <span>No account. No uploads. </span>
+          </footer>
+          <p class="prototype-note">
+            v0.5.1 connects guided hanging measurements with wall arrangements.
+            Replace example dimensions with your measurements. Wire predictions
+            need a loaded check after fitting. Everything stays on your device;
+            keep a JSON export as a backup. Sharing comes later.
+          </p>
+        </div>
+      </div>
+    </main>
+    <dialog
+      id="piece-editor"
+      class="piece-editor"
+      aria-labelledby="piece-editor-title"
+    >
+      <header class="piece-editor-header">
+        <div>
+          <p class="eyebrow">RIGHT HERE, NEXT TO YOUR PIECE</p>
+          <h2 id="piece-editor-title">Edit picture</h2>
+        </div>
+        <form method="dialog">
+          <button
+            class="icon-button"
+            type="submit"
+            aria-label="Close piece editor"
+          >
+            &#215;
+          </button>
+        </form>
+      </header>
+      <p class="piece-editor-hint">
+        Changes update the wall live. Escape closes this panel.
+      </p>
+      <div
+        id="piece-editor-feedback"
+        class="feedback"
+        role="status"
+        hidden
+      ></div>
+      <div id="piece-editor-fields"></div>
+    </dialog>
+    <dialog
+      id="dimension-editor"
+      class="dimension-editor"
+      aria-labelledby="dimension-title"
+    >
+      <form id="dimension-form" novalidate>
+        <h2 id="dimension-title">Edit dimension</h2>
+        <label
+          >Exact value <span id="dimension-unit"></span>
+          <input
+            id="dimension-value"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+          ></label
+        >
+        <p id="dimension-error" class="feedback error" role="alert" hidden></p>
+        <p class="hint">
+          Enter applies. Escape cancels. Existing position anchors stay fixed.
+        </p>
+        <div class="dimension-actions">
+          <button class="button dark" type="submit">Apply dimension</button
+          ><button id="dimension-cancel" class="button quiet" type="button">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog
+      id="shortcuts-dialog"
+      class="storage-dialog"
+      aria-labelledby="shortcuts-title"
+    >
+      <header class="storage-heading">
+        <h2 id="shortcuts-title">Keyboard shortcuts</h2>
+        <form method="dialog">
+          <button
+            class="icon-button"
+            type="submit"
+            aria-label="Close keyboard shortcuts"
+          >
+            &#215;
+          </button>
+        </form>
+      </header>
+      <dl class="shortcut-list">
+        <dt>1 / 2 / 3</dt>
+        <dd>Wall / Arrange / Install tools</dd>
+        <dt>D</dt>
+        <dd>Show or hide dimensions</dd>
+        <dt>F</dt>
+        <dd>Fit the wall to the view</dd>
+        <dt>Arrow keys</dt>
+        <dd>Nudge a focused picture. Shift takes a larger step.</dd>
+        <dt>Option/Alt + drag</dt>
+        <dd>
+          First movement chooses horizontal or vertical. The other position
+          stays fixed for that drag. Shift+click still selects multiple
+          pictures.
+        </dd>
+        <dt>Cmd/Ctrl + Z</dt>
+        <dd>Undo. Add Shift to redo.</dd>
+        <dt>?</dt>
+        <dd>Open this help</dd>
+      </dl>
+      <p>
+        Click a dimension to edit its exact value. Drag empty canvas to pan, or
+        enable Pan to drag anywhere. Ctrl/Cmd + wheel zooms around the pointer.
+        Touch users can use the zoom buttons and Pan.
+      </p>
+      <p>
+        Shortcuts do not intercept typing or modal controls. Zoom, pan and tool
+        selection change only this view, never exported measurements.
+      </p>
+    </dialog>
+    <dialog
+      id="storage-dialog"
+      class="storage-dialog"
+      aria-labelledby="storage-title"
+    >
+      <header class="storage-heading">
+        <h2 id="storage-title">Manage browser storage</h2>
+        <form method="dialog">
+          <button
+            class="icon-button"
+            type="submit"
+            aria-label="Close storage settings"
+          >
+            &#215;
+          </button>
+        </form>
+      </header>
+      <p>
+        Choose which Wallsemble data to clear. Export JSON first if you want to
+        keep a backup.
+      </p>
+      <label class="storage-choice"
+        ><input id="clear-local" type="checkbox">
+        <span
+          >Local storage<small
+            >Saved arrangements and theme preference. Also resets the open
+            layout so old data is not saved back.</small
+          ></span
+        ></label
+      >
+      <label class="storage-choice"
+        ><input id="clear-session" type="checkbox">
+        <span
+          >Session storage<small
+            >Wallsemble session keys in this tab and in-memory undo/redo
+            history. Saved layouts stay unless local storage is also
+            selected.</small
+          ></span
+        ></label
+      >
+      <p class="hint">
+        Only keys beginning with wallsemble. are removed. Other apps sharing
+        this origin are untouched. No project data is currently persisted in
+        session storage.
+      </p>
+      <div class="storage-actions">
+        <button id="clear-storage" class="button dark" type="button" disabled>
+          Clear selected data
+        </button>
+      </div>
+    </dialog>
+  </body>
+</html>
