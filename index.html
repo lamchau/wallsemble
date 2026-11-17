@@ -29,21 +29,31 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23a83c0a'/%3E%3Cpath d='M7 9l4 15 5-11 5 11 4-15' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"
     >
-    <script type="module" crossorigin src="./assets/index-BSy4FnB5.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DwUK9L8N.css">
+    <script type="module" crossorigin src="./assets/app-CpBJ0IDQ.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/theme-D4Ay0iBO.js">
+    <link rel="stylesheet" crossorigin href="./assets/theme-w2o9_EHN.css">
   </head>
   <body>
     <a class="skip-link" href="#workspace">Skip to workspace</a>
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Wallsemble home">
-        <span class="brand-mark" aria-hidden="true">W</span>wallsemble<span
-          class="version"
+      <div class="brand-group">
+        <a class="brand" href="./" aria-label="Wallsemble home">
+          <span class="brand-mark" aria-hidden="true">W</span>wallsemble<span
+            class="version"
+          >
+            v0.6.1
+          </span>
+        </a>
+        <a
+          class="release-link"
+          href="./changelog.html"
+          target="_blank"
+          rel="noopener"
+          title="Open changelog in a new tab"
+          >Changelog</a
         >
-          v0.6.0
-        </span>
-      </a>
+      </div>
       <div class="top-actions">
-        <span class="local-indicator">On your device. Yours to keep.</span>
         <button id="storage-button" class="button quiet" type="button">
           Storage
         </button>
@@ -73,7 +83,7 @@
           <p class="eyebrow">A PLACE FOR YOUR PIECES</p>
           <h1 id="page-title">Good art. <em>Right place.</em></h1>
           <p class="intro-copy">
-            Find the spot, get the measurements, make it yours.
+            Choose a position and calculate your hanging points.
           </p>
         </div>
         <fieldset class="unit-picker" aria-label="Measurement units">
@@ -86,6 +96,7 @@
         </fieldset>
       </section>
       <p id="notice" class="notice" role="status" hidden></p>
+      <p id="save-status" class="notice" role="status" hidden></p>
       <div class="workspace-tabs" role="tablist" aria-label="Planning views">
         <button
           id="workspace-hang"
@@ -308,8 +319,8 @@
                 </button>
               </fieldset>
               <p id="arrangement-status" class="hint" role="status">
-                Presets keep your measured sizes. Randomize respects wall
-                insets, furniture clearance and other pieces.
+                Presets fit inside wall insets and furniture clearance without
+                changing sizes or gaps. Randomize also avoids other pieces.
               </p>
               <div class="composition-actions">
                 <button data-arrange="top" class="button quiet" type="button">
@@ -991,12 +1002,12 @@
                     id="hang-piece-picker"
                   ></select></label
                 >
-                <h2 id="measuring-title">Start with the hardware you have</h2>
+                <h2 id="measuring-title">Start with your frame and hardware</h2>
                 <p id="measuring-instructions"></p>
                 <p class="hint">
-                  Read these diagrams with the frame top uppermost. The back
-                  view mirrors left/right automatically; input coordinates
-                  remain measured from the front-view left edge.
+                  Read these diagrams with the top of the frame facing up. The
+                  back view mirrors left and right. Enter measurements from the
+                  left edge as seen from the front.
                 </p>
               </div>
               <svg
@@ -1014,10 +1025,10 @@
                 aria-live="polite"
               ></p>
               <p class="hint hanging-help">
-                Set Outer width/height and the actual hardware measurements.
-                Left edge from wall and Center above floor specify where the
-                piece should sit; no complete wall setup is required. The wall
-                marks below are measured from that wall's left edge and the
+                Enter the outer width and height, then measure the hardware.
+                Left edge from wall and Center above floor set the piece's
+                position. You do not need to configure the whole wall first.
+                Wall marks are measured from the wall's left edge and the
                 finished floor.
               </p>
             </section>
@@ -1249,17 +1260,14 @@
             </p>
           </section>
           <footer class="workspace-footer">
-            <span id="save-status" role="status">
-              Changes stay in this browser.
-            </span>
-            <span>No account. No uploads. </span>
+            <a
+              href="./disclaimer.html"
+              target="_blank"
+              rel="noopener"
+              title="Open disclaimer in a new tab"
+              >Disclaimer</a
+            >
           </footer>
-          <p class="prototype-note">
-            v0.6.0 adds layout presets and Randomize in Arrange a wall. Your
-            measured sizes and hardware stay unchanged. Replace example
-            measurements and check loaded wire before installing. Everything
-            stays on your device; keep a JSON export as a backup.
-          </p>
         </div>
       </div>
     </main>
@@ -1284,7 +1292,7 @@
         </form>
       </header>
       <p class="piece-editor-hint">
-        Changes update the wall live. Escape closes this panel.
+        Changes update the wall immediately. Press Escape to close this panel.
       </p>
       <div
         id="piece-editor-feedback"
@@ -1312,7 +1320,7 @@
         >
         <p id="dimension-error" class="feedback error" role="alert" hidden></p>
         <p class="hint">
-          Enter applies. Escape cancels. Existing position anchors stay fixed.
+          Press Enter to apply or Escape to cancel. Position anchors stay fixed.
         </p>
         <div class="dimension-actions">
           <button class="button dark" type="submit">Apply dimension</button
@@ -1347,7 +1355,7 @@
         <dt>F</dt>
         <dd>Fit the wall to the view</dd>
         <dt>Arrow keys</dt>
-        <dd>Nudge a focused picture. Shift takes a larger step.</dd>
+        <dd>Nudge a focused picture. Hold Shift for a larger step.</dd>
         <dt>Option/Alt + drag</dt>
         <dd>
           First movement chooses horizontal or vertical. The other position
@@ -1362,7 +1370,7 @@
       <p>
         Click a dimension to edit its exact value. Drag empty canvas to pan, or
         enable Pan to drag anywhere. Ctrl/Cmd + wheel zooms around the pointer.
-        Touch users can use the zoom buttons and Pan.
+        On touchscreens, use the zoom buttons and Pan.
       </p>
       <p>
         Shortcuts do not intercept typing or modal controls. Zoom, pan and tool

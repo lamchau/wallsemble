@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e7eaeb">
+    <meta
+      name="description"
+      content="Changes and fixes in each Wallsemble version."
+    >
+    <title>Changelog - Wallsemble</title>
+    <script type="module" crossorigin src="./assets/theme-D4Ay0iBO.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/theme-w2o9_EHN.css">
+  </head>
+  <body class="document-page">
+    <a class="skip-link" href="#content">Skip to changelog</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Wallsemble home"
+        ><span class="brand-mark" aria-hidden="true">W</span>wallsemble</a
+      >
+      <nav class="top-actions" aria-label="Page navigation">
+        <a href="./">Planner</a><a href="./disclaimer.html">Disclaimer</a>
+        <select id="theme-picker" aria-label="Color theme">
+          <option value="system">System theme</option>
+          <option value="light">Light theme</option>
+          <option value="dark">Dark theme</option>
+        </select>
+      </nav>
+    </header>
+    <main id="content" class="document-content"><h1>Changelog</h1>
+<p>Changes are listed newest first. Earlier entries describe development checkpoints,
+which were not all published.</p>
+<h2>0.6.1</h2>
+<p>Released on 2026-11-17.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Keep presets inside wall insets and above furniture clearance without shrinking pieces or gaps.</li>
+<li>Leave the layout and undo history unchanged when a preset cannot fit.</li>
+<li>Choose a fitting starter pattern when creating a composition.</li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li>Add a changelog beside the version, rendered from Markdown at build time.</li>
+<li>Move storage and privacy information to a separate Disclaimer page.</li>
+<li>Clarify measurement instructions and remove routine save messages from the footer. Storage failures still appear in the planner.</li>
+</ul>
+<h2>0.6.0</h2>
+<p>Released on 2026-11-16.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Add illustrated Row, Column, Grid, Staggered and Staircase presets.</li>
+<li>Add Randomize with measured gaps, wall limits, furniture clearance and obstacle avoidance.</li>
+<li>Preserve frame sizes and hardware, with exact undo, redo and JSON backups.</li>
+</ul>
+<h2>0.5.1</h2>
+<p>Released on 2026-11-16.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Fit the printed wall correctly after viewport changes in Hang a piece.</li>
+<li>Improve measuring-diagram contrast when printing from dark mode.</li>
+</ul>
+<h2>0.5.0</h2>
+<p>Released on 2026-11-16.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Connect Hang a piece and Arrange a wall through the same measured pieces.</li>
+<li>Calculate 1-hook and 2-hook wire geometry from measured wire length, or plan new wire around fixed attachments.</li>
+<li>Require a new loaded-wire confirmation after changing the hook configuration.</li>
+<li>Preserve older projects when migrating to JSON schema 4.</li>
+</ul>
+<h2>0.4.7</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Keep Studio accents as the default and remove the accent selector and interim styles.</li>
+</ul>
+<h2>0.4.6</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Select the Drafting desk appearance, align measurement labels and fields, and use editor-style undo and redo icons.</li>
+</ul>
+<h2>0.4.5</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Add temporary style previews for comparing 5 visual directions.</li>
+</ul>
+<h2>0.4.4</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Maintenance</h3>
+<ul>
+<li>Clarify the shared project model and organize controls by workflow.</li>
+</ul>
+<h2>0.4.3</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Maintenance</h3>
+<ul>
+<li>Organize source by feature and model ownership.</li>
+</ul>
+<h2>0.4.2</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Maintenance</h3>
+<ul>
+<li>Simplify application state and geometry code while preserving measured values.</li>
+</ul>
+<h2>0.4.1</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Maintenance</h3>
+<ul>
+<li>Simplify drawing and interaction code.</li>
+</ul>
+<h2>0.4.0</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Add Wall, Arrange and Install tools with editable on-plan dimensions, zoom, pan and keyboard controls.</li>
+<li>Separate the canvas view from physical measurements.</li>
+</ul>
+<h2>0.3.2</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Offer to repair older asymmetric hanger examples without changing confirmed measurements.</li>
+</ul>
+<h2>0.3.1</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Keep single-hanger and paired-hanger measurements independent when switching modes or resizing.</li>
+</ul>
+<h2>0.3.0</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Add furniture context, measured clearance and per-edge wall insets.</li>
+<li>Keep furniture and inset warnings advisory until Apply placement is selected.</li>
+</ul>
+<h2>0.2.0</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Add multi-piece compositions, groups and independent layout alternatives on a shared wall.</li>
+<li>Add row and grid templates, alignment tools and exact JSON portability.</li>
+</ul>
+<h2>0.1.0</h2>
+<p>Released on 2026-11-15.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Introduce measured picture-hanging calculations, interactive placement, browser saving, JSON backups and printing.</li>
+</ul>
+</main>
+  </body>
+</html>
