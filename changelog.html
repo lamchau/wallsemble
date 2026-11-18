@@ -30,6 +30,17 @@
     <main id="content" class="document-content"><h1>Changelog</h1>
 <p>Changes are listed newest first. Earlier entries describe development checkpoints,
 which were not all published.</p>
+<h2>0.7.7</h2>
+<p>Released on 2026-11-17.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Preserve redo when reapplying a preset or alignment, including fractional arrangements near wall insets. Keep existing coordinates when arithmetic adds only floating-point noise.</li>
+<li>Report unchanged arrangements without claiming that pictures moved.</li>
+</ul>
+<h3>Refactoring</h3>
+<ul>
+<li>Share exact no-op detection between presets, randomization and selected-block positioning.</li>
+</ul>
 <h2>0.7.6</h2>
 <p>Released on 2026-11-17.</p>
 <h3>Bug fixes</h3>
