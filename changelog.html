@@ -9,8 +9,8 @@
       content="Changes and fixes in each Wallsemble version."
     >
     <title>Changelog - Wallsemble</title>
-    <script type="module" crossorigin src="./assets/theme-D4Ay0iBO.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/theme-w2o9_EHN.css">
+    <script type="module" crossorigin src="./assets/theme-BSIugD4u.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/theme-DJT2625J.css">
   </head>
   <body class="document-page">
     <a class="skip-link" href="#content">Skip to changelog</a>
@@ -30,6 +30,53 @@
     <main id="content" class="document-content"><h1>Changelog</h1>
 <p>Changes are listed newest first. Earlier entries describe development checkpoints,
 which were not all published.</p>
+<h2>0.7.3</h2>
+<p>Released on 2026-11-17.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Reject negative hook spacing before it reaches saved hardware measurements.</li>
+<li>Keep invalid measurements visible until corrected before changing the hanging setup, wire method or hook count.</li>
+</ul>
+<h2>0.7.2</h2>
+<p>Released on 2026-11-17.</p>
+<h3>Bug fixes</h3>
+<ul>
+<li>Keep checked pictures selected when editing a picture in the selection.</li>
+<li>Return keyboard focus to the control that opened the picture editor, including after measurement changes.</li>
+<li>Keep unfinished measurements when using Center on wall or Use standard height. Preserve redo when these actions move nothing.</li>
+</ul>
+<h3>Refactoring</h3>
+<ul>
+<li>Share validation and history handling between the quick-placement controls. Remove the editor&#39;s selection-reset callback.</li>
+</ul>
+<h2>0.7.1</h2>
+<p>Released on 2026-11-17.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Start compositions with pictures and movement controls. Tuck layout and saved-group settings into optional sections.</li>
+<li>Show which pictures each arrangement action affects. Use Select group and Randomize all labels.</li>
+<li>Let the whole page scroll on phones instead of trapping controls in a second scrolling panel.</li>
+</ul>
+<h3>Bug fixes</h3>
+<ul>
+<li>Keep all selected pictures together when nudging a focused picture that is not being edited.</li>
+<li>Preserve pending group-height edits through zoom and fit, without rounding measurements during unit changes.</li>
+<li>Keep metric group heights readable on desktop and phones.</li>
+<li>Preserve redo when clicking the active unit. Clear stale movement feedback and associate height errors with their input.</li>
+</ul>
+<h3>Refactoring</h3>
+<ul>
+<li>Give selection-position controls their own controller for drafts, validation and feedback. Keep measured geometry and history unchanged.</li>
+</ul>
+<h2>0.7.0</h2>
+<p>Released on 2026-11-17.</p>
+<h3>Enhancements</h3>
+<ul>
+<li>Add Select all and canvas-focused Cmd/Ctrl+A without changing groups or intercepting text-field shortcuts.</li>
+<li>Position selected pictures as 1 block against wall insets or furniture, preserving internal spacing and hardware.</li>
+<li>Set the selection&#39;s bounding-box center height in inches, fractions or centimeters. Reject positions that cannot fit without changing saved geometry or undo/redo.</li>
+<li>Make Randomize place every picture in the current layout, regardless of selection. Keep other layout alternatives unchanged.</li>
+</ul>
 <h2>0.6.1</h2>
 <p>Released on 2026-11-17.</p>
 <h3>Bug fixes</h3>

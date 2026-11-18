@@ -29,9 +29,9 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23a83c0a'/%3E%3Cpath d='M7 9l4 15 5-11 5 11 4-15' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"
     >
-    <script type="module" crossorigin src="./assets/app-CpBJ0IDQ.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/theme-D4Ay0iBO.js">
-    <link rel="stylesheet" crossorigin href="./assets/theme-w2o9_EHN.css">
+    <script type="module" crossorigin src="./assets/app-DHYY9ZTh.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/theme-BSIugD4u.js">
+    <link rel="stylesheet" crossorigin href="./assets/theme-DJT2625J.css">
   </head>
   <body>
     <a class="skip-link" href="#workspace">Skip to workspace</a>
@@ -41,7 +41,7 @@
           <span class="brand-mark" aria-hidden="true">W</span>wallsemble<span
             class="version"
           >
-            v0.6.1
+            v0.7.3
           </span>
         </a>
         <a
@@ -182,28 +182,32 @@
               <span id="piece-count" class="small-label"></span>
             </div>
             <label>Active layout<select id="layout-picker"></select></label>
-            <label class="spaced"
-              >Layout name<input
-                id="layout-name"
-                type="text"
-                maxlength="100"
-              ></label
-            >
-            <div class="inline-actions">
-              <button id="copy-layout" class="text-button" type="button">
-                Duplicate layout
-              </button><button
-                id="delete-layout"
-                class="text-button"
-                type="button"
+            <details id="layout-options" class="arrangement-options">
+              <summary>Layout options</summary>
+              <label class="spaced"
+                >Layout name<input
+                  id="layout-name"
+                  type="text"
+                  maxlength="100"
+                ></label
               >
-                Delete layout
-              </button>
-            </div>
+              <div class="inline-actions">
+                <button id="copy-layout" class="text-button" type="button">
+                  Duplicate layout
+                </button><button
+                  id="delete-layout"
+                  class="text-button"
+                  type="button"
+                >
+                  Delete layout
+                </button>
+              </div>
+            </details>
             <div id="composition-tools" hidden>
-              <p class="small-label spaced">
-                PIECES
-                <span class="hint"> / select to edit, check to group</span>
+              <p class="small-label spaced">YOUR PICTURES</p>
+              <p class="hint">
+                Check pictures to move or arrange together. Click a name to
+                edit.
               </p>
               <div id="piece-list" class="piece-list"></div>
               <div class="composition-actions">
@@ -224,39 +228,92 @@
                 </button>
               </div>
               <p id="selection-summary" class="hint" role="status"></p>
-              <button
-                id="select-composition"
-                class="text-button spaced"
-                type="button"
-              >
-                Select composition
-              </button>
               <div class="inline-actions">
-                <button id="group-pieces" class="text-button" type="button">
-                  Group selected
+                <button id="select-all" class="text-button" type="button">
+                  Select all
                 </button><button
-                  id="ungroup-pieces"
+                  id="select-composition"
                   class="text-button"
                   type="button"
                 >
-                  Ungroup
+                  Select group
                 </button>
               </div>
-              <label id="group-name-label" class="spaced" hidden
-                >Composition name<input
-                  id="group-name"
-                  type="text"
-                  maxlength="100"
-                ></label
-              >
-              <p class="small-label spaced">LAYOUT PRESETS</p>
+              <fieldset id="selection-position" class="selection-position">
+                <legend class="small-label">Move together</legend>
+                <label
+                  >Align with<select id="selection-reference">
+                    <option value="wall">Wall insets</option>
+                    <option id="selection-furniture-option" value="furniture">
+                      Furniture (set in Wall)
+                    </option>
+                  </select></label
+                >
+                <div class="composition-actions">
+                  <button
+                    data-position-selection="left"
+                    class="button quiet"
+                    type="button"
+                    aria-label="Align selection left"
+                  >
+                    Left
+                  </button>
+                  <button
+                    data-position-selection="center"
+                    class="button quiet"
+                    type="button"
+                    aria-label="Center selection"
+                  >
+                    Center
+                  </button>
+                  <button
+                    data-position-selection="right"
+                    class="button quiet"
+                    type="button"
+                    aria-label="Align selection right"
+                  >
+                    Right
+                  </button>
+                </div>
+                <div>
+                  <label class="inset-label"
+                    >Selection center above floor<span
+                      class="measure-input short"
+                      ><input
+                        id="selection-center-height"
+                        aria-describedby="selection-height-help selection-position-status"
+                        type="text"
+                        inputmode="decimal"
+                      ><span data-unit>in</span></span
+                    ></label
+                  >
+                  <button
+                    id="apply-selection-height"
+                    class="button quiet spaced"
+                    type="button"
+                  >
+                    Apply height
+                  </button>
+                </div>
+                <p id="selection-height-help" class="hint">
+                  Height is measured to the center of the whole selection.
+                  Furniture alignment uses its clearance.
+                </p>
+              </fieldset>
+              <p id="selection-position-help" class="hint"></p>
+              <p id="selection-position-status" class="hint" role="status"></p>
+              <p id="arrangement-scope" class="small-label spaced"></p>
               <label class="inset-label"
                 >Template gap<span class="measure-input short"
                   ><input id="layout-gap" type="text" inputmode="decimal">
                   <span data-unit>in</span></span
                 ></label
               >
-              <fieldset class="preset-grid" aria-label="Layout presets">
+              <fieldset
+                class="preset-grid"
+                aria-label="Layout presets"
+                aria-describedby="arrangement-scope"
+              >
                 <button data-arrange="row" class="button quiet" type="button">
                   <svg viewBox="0 0 64 40" aria-hidden="true">
                     <path
@@ -315,14 +372,19 @@
                       d="M5 8h14v22H5z M25 2h15v14H25z M25 22h15v16H25z M46 10h13v20H46z"
                     />
                   </svg
-                  >Randomize
+                  >Randomize all
                 </button>
               </fieldset>
-              <p id="arrangement-status" class="hint" role="status">
-                Presets fit inside wall insets and furniture clearance without
-                changing sizes or gaps. Randomize also avoids other pieces.
+              <p class="hint">
+                Try a layout without changing picture sizes. Randomize all uses
+                every picture, even unchecked ones.
               </p>
-              <div class="composition-actions">
+              <p id="arrangement-status" class="hint" role="status"></p>
+              <p id="alignment-scope" class="small-label spaced"></p>
+              <fieldset
+                class="composition-actions"
+                aria-labelledby="alignment-scope"
+              >
                 <button data-arrange="top" class="button quiet" type="button">
                   Align tops
                 </button><button
@@ -338,7 +400,32 @@
                 >
                   Equal gaps
                 </button>
-              </div>
+              </fieldset>
+              <details id="group-options" class="arrangement-options">
+                <summary>Save or edit a group</summary>
+                <div class="inline-actions">
+                  <button id="group-pieces" class="text-button" type="button">
+                    Group selected
+                  </button><button
+                    id="ungroup-pieces"
+                    class="text-button"
+                    type="button"
+                  >
+                    Ungroup
+                  </button>
+                </div>
+                <label id="group-name-label" class="spaced" hidden
+                  >Group name<input
+                    id="group-name"
+                    type="text"
+                    maxlength="100"
+                  ></label
+                >
+                <p class="hint">
+                  Save pictures as a group to select them together later.
+                  Ungrouping keeps them in place.
+                </p>
+              </details>
               <label class="snap-toggle"
                 ><input id="snap-toggle" type="checkbox">
                 Snap while dragging
@@ -346,9 +433,8 @@
               >
               <p class="hint">
                 Click a picture to select it; drag to move the selection.
-                Shift-click adds or removes pieces. Use Select composition to
-                move the whole group. Tools affect checked pieces, or all pieces
-                if fewer than 2 are checked.
+                Shift-click adds or removes pictures. Select group brings a
+                saved group back into your selection.
               </p>
             </div>
           </section>
@@ -1361,6 +1447,10 @@
           First movement chooses horizontal or vertical. The other position
           stays fixed for that drag. Shift+click still selects multiple
           pictures.
+        </dd>
+        <dt>Cmd/Ctrl + A</dt>
+        <dd>
+          Select all pictures in the active layout when the canvas has focus.
         </dd>
         <dt>Cmd/Ctrl + Z</dt>
         <dd>Undo. Add Shift to redo.</dd>
